@@ -1,0 +1,21 @@
+{
+	"build_systems":
+	[
+		{
+			"name": "Gradle",
+			"shell_cmd": "gradle build --warning-mode all",
+			"working_dir": "${project_path}",
+			"file_regex": "^[ew]: (.:[^:]*): \\((\\d+), (\\d+)\\): ([^\n]+)"
+		}
+	],
+	"folders":
+	[
+		{
+			"path": "client/src"
+		}
+	],
+	"settings":
+	{
+		"tab_size": 2
+	}
+}

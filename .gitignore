@@ -1,0 +1,7 @@
+.gradle
+build/
+web/
+
+*.sublime-workspace
+Thumbs.db
+*.zip
