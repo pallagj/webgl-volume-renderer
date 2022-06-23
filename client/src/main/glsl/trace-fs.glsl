@@ -20,6 +20,7 @@ uniform struct{
   sampler2D matcap1;
   sampler2D matcap2;
   float state;
+  float layerWidth;
 } scene;
 
 in vec2 tex;
@@ -123,7 +124,7 @@ void main(void) {
     }
 
     if (h > 0.0){
-      fragmentColor.rgb += h*vec3(1.0, 1.0, 1.0);
+      fragmentColor.rgb += h * vec3(1.0, 1.0, 1.0);
     } else {
       fragmentColor.rgb += vec3(0.0, 0.0, 0.0);//texture(scene.env, d.xyz).rgb;
     }
@@ -132,10 +133,10 @@ void main(void) {
 
 
   float sum_a = 0.0;
-  float maxH = 0.3;
+  float maxH = scene.layerWidth;
   int i = 0;
 
-  for(int index = 0; index < 3 && sum_a < 1.0 && ((scene.state != 0.0 && scene.state != 2.0) || index == 0); index++){
+  for(int index = 0; index < 3 && sum_a < 1.0 && ((scene.state != 0.0 && scene.state != 2.0) || index == 0) && scene.state != 3.0; index++){
     float a = 0.0;
 
     for (; i<128; i++){
@@ -153,7 +154,7 @@ void main(void) {
     if(scene.state == 0.0 || scene.state == 2.0){
       a = 1.0;
     } else {
-      maxH += 0.3;
+      maxH += scene.layerWidth;
     }
 
     float eps = 0.01;
@@ -170,7 +171,15 @@ void main(void) {
       a = min(a, 1.0 - dot(normal, -d));
 
       if (scene.state == 0.0f || scene.state == 2.0f){
-        vec3 kd = vec3(255.0/255.0, 158.0/255.0, 170.0/255.0);//vec3(0.1, 0.0, 0.05);//vec3(0.3, 0.3, 0.3);
+        //vec3 kd = vec3(255.0/255.0*h, 158.0/255.0, 170.0/255.0);//vec3(0.1, 0.0, 0.05);//vec3(0.3, 0.3, 0.3);
+        vec3 kd0 = vec3(237.0, 183.0, 144.0)/255.0;
+        vec3 kd1 = vec3(225.0, 0.0, 0.0)/255.0;
+        vec3 kd2 = vec3(255.0, 255.0, 255.0)/255.0;
+
+        float ha = 0.2;
+        float ht = ha*2.0*(1.0-h)*h + h*h;
+        vec3 kd = kd0*1.0*(1.0-ht)*(1.0-ht) + kd1*2.0*(1.0-ht)*ht + kd2*1.0*ht*ht;
+
         vec3 ks = vec3(2.0, 2.0, 2.0)*0.5;//vec3(0.4, 0.2, 0.7);
         float shininess = 100.0;//15.0f;
         fragmentColor.rgb += a*directLightning(d, p, normal, kd, ks, shininess, maxH);

@@ -27,6 +27,7 @@ class Scene (
   val matcap1 = Sampler2D()
   val matcap2 = Sampler2D()
   var state by Vec1(0.0f)
+  var layerWidth by Vec1(0.01f)
 
 
   init {
@@ -34,7 +35,7 @@ class Scene (
       , "media/posy512.jpg", "media/negy512.jpg", "media/posz512.jpg", "media/negz512.jpg"))
     addComponentsAndGatherUniforms(*Program.all)
     lights.add(Light(0))
-    lights[0].position.set(3.0f, 2.0f, 3.1f, 0f)//(1f, 1f, 1f, 0f).normalize()
+    lights[0].position.set(-3.0f, -2.0f, -3.1f, 0f)//(1f, 1f, 1f, 0f).normalize()
     lights[0].powerDensity.set(10.951f, 10.951f, 10.951f, 1f)
 
     lights.add(Light(1))
@@ -77,6 +78,14 @@ class Scene (
     }
     if("3" in keysPressed){
       state = Vec1(3.0f)
+    }
+
+    if("M" in keysPressed){
+      layerWidth = Vec1(layerWidth.x + 0.001f)
+    }
+
+    if("N" in keysPressed){
+      layerWidth = Vec1(layerWidth.x  - 0.001f)
     }
     // clear the screen
     gl.clearColor(0.0f, 0.0f, 0.3f, 1.0f)
